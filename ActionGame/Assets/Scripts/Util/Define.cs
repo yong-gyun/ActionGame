@@ -18,6 +18,13 @@ public class Define
 
     public enum Scene
     {
+        Title,
+        Game
+    }
 
+    public enum Sound
+    {
+        Bgm,
+        Effect
     }
 }

@@ -283,6 +283,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4393946019257510, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
   m_PrefabInstance: {fileID: 170212405}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &170212407 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1189674227078662, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
+  m_PrefabInstance: {fileID: 170212405}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &170212408
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170212407}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.8, y: 1.7367151, z: 0.09594018}
+  m_Center: {x: -0.00000011050527, y: 0.6614345, z: 0.00000007033893}
 --- !u!137 &436460833
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
