@@ -7,8 +7,7 @@ public class Define
     public enum PlayerState
     {
         Idle,
-        Walk,
-        Run,
+        Move,
         Attack,
         Defence,
         SpecalAttack_One,
@@ -18,13 +17,19 @@ public class Define
 
     public enum Scene
     {
-        Title,
-        Game
+        Menu,
+        Game,
     }
 
     public enum Sound
     {
         Bgm,
         Effect
+    }
+
+    public enum Weapone
+    {
+        Sword,
+        Shield
     }
 }

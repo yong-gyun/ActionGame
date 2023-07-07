@@ -1,27 +1,74 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class PlayerController : BaseController
 {
-    PlayerStat _stat;
 
-    protected override void Init()
+    public Define.PlayerState State
     {
+        get
+        {
+            return _state;
+        }
+        set
+        {
+            _state = value;
+
+            switch(State)
+            {
+                case Define.PlayerState.Idle:
+                    _anim.CrossFade("Idle", 0.1f);
+                    break;
+            }    
+        }
+    }
+
+    [SerializeField] Define.PlayerState _state;
+
+    PlayerStat _stat;
+    GameObject _weapone;
+
+    protected override bool Init()
+    {
+        if (base.Init() == false)
+            return false;
+
         Managers.Game.SetPlayer(gameObject);
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
-        _stat.Init();
-        base.Init();
+        
+        RefreshPlayer();
+        return true;
     }
+
+    public void RefreshPlayer()
+    {
+        _stat.Init();
+    }
+
 
     protected override void OnAttack()
     {
         
     }
 
-    protected override void UpdateAttack()
+    void OnHitEvent()
+    {
+
+    }
+
+    void OnEndHitEvent()
     {
         
+    }
+
+    protected override void UpdateAttack()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            
+        }
     }
 
     protected override void UpdateMove()    
@@ -33,22 +80,27 @@ public class PlayerController : BaseController
         
         if(dir != Vector3.zero)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-                _stat.MoveSpeed = _stat.MoveSpeedToRun;
-            else
-                _stat.MoveSpeed = _stat.MoveSpeedToWalk;
+            float value = 0;
 
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                _stat.MoveSpeed = _stat.MoveSpeedToRun;
+                value = 1f;
+            }
+            else
+            {
+                _stat.MoveSpeed = _stat.MoveSpeedToWalk;
+                value = 0.5f;
+            }
             transform.position += dir * _stat.MoveSpeed * Time.deltaTime;
             Quaternion lookRotation = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 180);
 
-            float value = _stat.MoveSpeed / _stat.MoveSpeedToRun;
             _anim.SetFloat("Speed", value);
         }
         else
         {
             _anim.SetFloat("Speed", 0f);
         }
-
     }
 }

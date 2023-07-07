@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class BaseController : MonoBehaviour
 {
     protected Animator _anim;
+    [SerializeField] protected bool _init;
 
     protected virtual void Awake()
     {
@@ -15,11 +16,16 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void Update()
     {
         UpdateMove();
+        UpdateAttack();
     }
 
-    protected virtual void Init()
+    protected virtual bool Init()
     {
+        if (_init)
+            return false;
 
+        _init = true;
+        return true;
     }
 
     protected abstract void UpdateMove();
