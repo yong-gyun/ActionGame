@@ -5,28 +5,6 @@ using UnityEngine;
 
 public class PlayerController : BaseController
 {
-
-    public Define.PlayerState State
-    {
-        get
-        {
-            return _state;
-        }
-        set
-        {
-            _state = value;
-
-            switch(State)
-            {
-                case Define.PlayerState.Idle:
-                    _anim.CrossFade("Idle", 0.1f);
-                    break;
-            }    
-        }
-    }
-
-    [SerializeField] Define.PlayerState _state;
-
     PlayerStat _stat;
     GameObject _weapone;
 
@@ -47,27 +25,16 @@ public class PlayerController : BaseController
         _stat.Init();
     }
 
-
     protected override void OnAttack()
     {
-        
-    }
-
-    void OnHitEvent()
-    {
-
-    }
-
-    void OnEndHitEvent()
-    {
-        
+        _anim.SetTrigger("OnAttack");
     }
 
     protected override void UpdateAttack()
     {
         if(Input.GetMouseButtonDown(0))
         {
-            
+            OnAttack();
         }
     }
 
