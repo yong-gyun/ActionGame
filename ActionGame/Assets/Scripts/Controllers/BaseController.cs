@@ -2,21 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseController : MonoBehaviour
+public class BaseController : MonoBehaviour
 {
-    protected Animator _anim;
-    [SerializeField] protected bool _init;
+    protected bool _init;
 
-    protected virtual void Awake()
+    private void Start()
     {
-        _anim = GetComponent<Animator>();
         Init();
-    }
-
-    protected virtual void Update()
-    {
-        UpdateMove();
-        UpdateAttack();
     }
 
     protected virtual bool Init()
@@ -28,7 +20,9 @@ public abstract class BaseController : MonoBehaviour
         return true;
     }
 
-    protected abstract void UpdateMove();
-    protected abstract void UpdateAttack();
-    protected abstract void OnAttack();
+    protected virtual void Refresh() { }
+
+    protected virtual void UpdateMove() { }
+    protected virtual void UpdateAttack() { }
+    protected virtual void OnDie() { }
 }

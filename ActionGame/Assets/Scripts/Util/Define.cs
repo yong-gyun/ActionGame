@@ -9,10 +9,19 @@ public class Define
         Idle,
         Move,
         Attack,
-        Defence,
+        Defense,
         SpecalAttack_One,
         SpecalAttack_Two,
         AttackAvoidance,
+        Die
+    }
+
+    public enum MouseEvent
+    {
+        Click,
+        PointerDown,
+        PointerUp,
+        Pressed,
     }
 
     public enum Scene
