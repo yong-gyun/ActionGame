@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerController : BaseController
 {
@@ -19,58 +17,43 @@ public class PlayerController : BaseController
         {
             //TODO @이벤트 전환 부드럽게 만들기
             //float smoothDamp = 0.1f;
-            float transitionDuration = 0.25f;
-
-            if (value == Define.PlayerState.Attack)
-                _anim.SetBool("IsAttack", false);
-                //_anim.CrossFade("Attack", transitionDuration);
-
-            if (value == Define.PlayerState.Defense)
-                _anim.SetBool("IsDefense", false);
-                //_anim.CrossFade("Defense", transitionDuration);
+            float transitionDuration = 0.1f;
+            float normalizedTimeOffset = 0.1f;
+            _state = value;
 
             switch (value)
             {
                 case Define.PlayerState.Idle:
-                    _anim.SetFloat("Speed", 0f);
-                    //_anim.CrossFade("Idle", transitionDuration);
+                    _anim.CrossFade("Idle", transitionDuration, 0, normalizedTimeOffset);
                     break;
                 case Define.PlayerState.Move:
-                    float speed = _stat.MoveSpeed / _stat.MoveSpeedToRun == 1 ? 1f : 0.5f;
-                    _anim.SetFloat("Speed", speed);
-                    //_anim.CrossFade("Move", transitionDuration);
+                    _anim.CrossFade("Move", transitionDuration, 0, normalizedTimeOffset);
                     break;
                 case Define.PlayerState.Attack:
-                    if (value == Define.PlayerState.Move)
-                        _anim.SetFloat("Speed", 0f);
-
-                    _anim.SetBool("IsAttack", true);
-                    //_anim.CrossFade("Attack", transitionDuration);
+                    _anim.CrossFade("Attack", transitionDuration, 0, normalizedTimeOffset);
                     break;
                 case Define.PlayerState.Defense:
-                    _anim.SetBool("IsDefense", true);
-                    //_anim.CrossFade("Defense", transitionDuration);
+                    _anim.CrossFade("Defense", transitionDuration, 0, normalizedTimeOffset);
                     break;
                 case Define.PlayerState.AttackAvoidance:
-                    _anim.SetTrigger("OnAttackaboiance");
-                    //_anim.CrossFade("Attackavoidance", transitionDuration);
+                    _anim.CrossFade("Attackaboidance", transitionDuration, 0, normalizedTimeOffset);
                     break;
                 case Define.PlayerState.SpecalAttack_One:
-                    _anim.SetTrigger("OnSkillOne");
+                    _anim.CrossFade("SkillOne", transitionDuration, 0, normalizedTimeOffset);
                     break;
                 case Define.PlayerState.SpecalAttack_Two:
-                    _anim.SetTrigger("OnSkillTwo");
+                    _anim.CrossFade("SkillTwo", transitionDuration, 0, normalizedTimeOffset);
                     break;
             }
-
-            _state = value;
         }
     }
 
     Rigidbody _rigid;
     [SerializeField] Define.PlayerState _state;
-    Vector3 _dir;
-    bool _isAttacked;
+    [SerializeField] Vector3 _dir;
+    [SerializeField] bool _useSkill;
+    Collider _sword;
+    Collider _shield;
 
     protected override bool Init()
     {
@@ -91,13 +74,13 @@ public class PlayerController : BaseController
         OnKeyEvent();
         OnMouseEvent();
 
-        switch(State)
+        switch (State)
         {
             case Define.PlayerState.Move:
                 UpdateMove();
                 break;
-            case Define.PlayerState.Attack: 
-                UpdateAttack(); 
+            case Define.PlayerState.Attack:
+                UpdateAttack();
                 break;
             case Define.PlayerState.Defense:
                 UpdateDefence();
@@ -112,22 +95,27 @@ public class PlayerController : BaseController
 
     void OnKeyEvent()
     {
-        if (_isAttacked)
+        if (_useSkill)
             return;
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            OnAttackaboidance();
+            OnAttackaboidance(0);
+            return;
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             State = Define.PlayerState.SpecalAttack_One;
+            _useSkill = true;
+            return;
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             State = Define.PlayerState.SpecalAttack_Two;
+            _useSkill = true;
+            return;
         }
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -135,25 +123,26 @@ public class PlayerController : BaseController
 
         _dir = (horizontal * Vector3.right) + (vertical * Vector3.forward);
 
-        if(_dir != Vector3.zero)
+        if (_dir != Vector3.zero)
         {
             if (Input.GetKey(KeyCode.LeftShift))
                 _stat.MoveSpeed = _stat.MoveSpeedToRun;
             else
                 _stat.MoveSpeed = _stat.MoveSpeedToWalk;
-
-            if(State == Define.PlayerState.Idle)
+            
+            if (State == Define.PlayerState.Idle)
                 State = Define.PlayerState.Move;
         }
     }
 
     void OnMouseEvent()
     {
-        if(!_isAttacked)
+        if (!_useSkill)
         {
+            _useSkill = Input.GetMouseButtonDown(0) || Input.GetMouseButton(1);
+
             if (Input.GetMouseButtonDown(0))
             {
-                _isAttacked = true;
                 State = Define.PlayerState.Attack;
                 return;
             }
@@ -165,17 +154,11 @@ public class PlayerController : BaseController
         }
         else
         {
-            if(Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(1))
             {
-                _isAttacked = false;
+                _useSkill = false;
                 State = Define.PlayerState.Idle;
-                _anim.SetBool("IsAttack", false);
             }
-        }
-
-        if(Input.GetMouseButtonUp(1))
-        {
-            _anim.SetBool("IsDefense", false);
         }
     }
 
@@ -184,16 +167,21 @@ public class PlayerController : BaseController
         if (_dir == Vector3.zero)
         {
             State = Define.PlayerState.Idle;
+            return;
         }
 
         if (Physics.Raycast(transform.position, transform.forward, 2.5f, LayerMask.GetMask("Block")))
             return;
 
-        if(_dir != Vector3.zero)
+        float destSpeed = _stat.MoveSpeed / _stat.MoveSpeedToRun == 1 ? 1f : 0.5f;
+        _anim.SetFloat("Speed", destSpeed);
+
+
+        if (_dir != Vector3.zero)
         {
             transform.position += _dir.normalized * _stat.MoveSpeed * Time.deltaTime;
             Quaternion qua = Quaternion.LookRotation(_dir.normalized);
-            transform.rotation = qua;
+            transform.rotation = Quaternion.Slerp(transform.rotation, qua, 20f * Time.deltaTime);
         }
     }
 
@@ -204,20 +192,28 @@ public class PlayerController : BaseController
 
     void UpdateDefence()
     {
-        
+
     }
 
     float _dashPower = 5f;
 
-    void OnAttackaboidance()
+    void OnAttackaboidance(int sequnce)
     {
-        _rigid.AddForce(_dir * _dashPower, ForceMode.Impulse);
-        State = Define.PlayerState.AttackAvoidance;
+        switch(sequnce)
+        {
+            case 0:
+                _rigid.AddForce(_dir * _dashPower, ForceMode.Impulse);
+                State = Define.PlayerState.AttackAvoidance;
+                break;
+            case 1:
+                State = Define.PlayerState.Idle;
+                break;
+        }
     }
 
     void OnAttack(int sequnce)
     {
-        switch(sequnce)
+        switch (sequnce)
         {
             case 0:
                 //무기 콜라이더 ON
@@ -227,6 +223,8 @@ public class PlayerController : BaseController
                 break;
             case 2:
                 //무기 애니메이션 OFF
+                State = Define.PlayerState.Idle;
+                _useSkill = false;
                 break;
         }
     }
@@ -234,11 +232,13 @@ public class PlayerController : BaseController
     void OnSkillOne()
     {
         State = Define.PlayerState.Idle;
+        _useSkill = false;
     }
 
     void OnSkillTwo()
     {
         State = Define.PlayerState.Idle;
+        _useSkill = false;
     }
 
     protected override void OnDie()
