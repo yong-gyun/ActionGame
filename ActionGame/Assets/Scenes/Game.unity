@@ -237,16 +237,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4393946019257510, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393946019257510, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.7123
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393946019257510, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.079
+      value: -0.07890969
       objectReference: {fileID: 0}
     - target: {fileID: 4393946019257510, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.012
+      value: -0.047677726
       objectReference: {fileID: 0}
     - target: {fileID: 4393946019257510, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.004
+      value: 0.004194219
       objectReference: {fileID: 0}
     - target: {fileID: 4393946019257510, guid: ec413a0fd2a940f4d9475a8299d85f9c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -299,8 +307,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 1.7367151, z: 0.09594018}
-  m_Center: {x: -0.00000011050527, y: 0.6614345, z: 0.00000007033893}
+  m_Size: {x: 0.8, y: 2.0097835, z: 0.09594018}
+  m_Center: {x: -0.000000109622604, y: 0.7979688, z: 0.00000007914038}
 --- !u!137 &436460833
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0

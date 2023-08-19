@@ -7,14 +7,14 @@ public class Managers : MonoBehaviour
     static Managers Instance { get { Init(); return s_instance; } }
     static Managers s_instance = null;
 
-    InputManager _input = new InputManager();
     ResourceManager _resource = new ResourceManager();
     ObjectManager _object = new ObjectManager();
+    UIManager _ui = new UIManager();
     GameManager _game = new GameManager();
 
-    public static InputManager Input { get { return Instance._input; } }
-    public static ResourceManager Reosurce { get { return Instance._resource; } }
+    public static ResourceManager Resource { get { return Instance._resource; } }
     public static ObjectManager Object { get { return Instance._object; } }
+    public static UIManager UI { get { return Instance._ui; } }
     public static GameManager Game { get { return Instance._game; } }
 
     static void Init()
@@ -40,14 +40,9 @@ public class Managers : MonoBehaviour
         Init();
     }
 
-    private void Update()
-    {
-        _input.OnUpdate();
-    }
-
     public static void Clear()
     {
         s_instance._object.Clear();
-        s_instance._input.Clear();
+        s_instance._ui.Clear();
     }
 }

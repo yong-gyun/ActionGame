@@ -26,6 +26,7 @@ public class Define
 
     public enum Scene
     {
+        Title,
         Menu,
         Game,
     }
