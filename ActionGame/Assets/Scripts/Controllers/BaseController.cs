@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BaseController : MonoBehaviour
 {
+    public Define.WorldObject WorldObjectType = Define.WorldObject.Unknow;
     protected bool _init;
+    protected Animator _anim;
 
     private void Start()
     {
@@ -16,12 +18,12 @@ public class BaseController : MonoBehaviour
         if (_init)
             return false;
 
+        _anim = GetComponent<Animator>();
         _init = true;
         return true;
     }
 
     protected virtual void Refresh() { }
-
     protected virtual void UpdateMove() { }
     protected virtual void UpdateAttack() { }
     protected virtual void OnDie() { }

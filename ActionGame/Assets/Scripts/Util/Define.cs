@@ -4,6 +4,27 @@ using UnityEngine;
 
 public class Define
 {
+    public enum WorldObject
+    {
+        Unknow,
+        Player,
+        Slime,
+        BigSlime,
+        Skeleton,
+        CopperKnight,
+        SilverKnight,
+        GoldKnight
+    }
+
+    public enum EnemyState
+    {
+        Move,
+        Attack,
+        RangeAttack,
+        Hit,
+        Die
+    }
+
     public enum PlayerState
     {
         Idle,

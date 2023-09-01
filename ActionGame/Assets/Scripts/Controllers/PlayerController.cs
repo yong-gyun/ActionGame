@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class PlayerController : BaseController
 {
-
     PlayerStat _stat;
-    Animator _anim;
+
     public Define.PlayerState State
     {
         get
@@ -61,7 +60,6 @@ public class PlayerController : BaseController
             return false;
 
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
-        _anim = GetComponent<Animator>();
         _rigid = GetComponent<Rigidbody>();
         return true;
     }
@@ -90,7 +88,7 @@ public class PlayerController : BaseController
 
     protected override void Refresh()
     {
-        _stat.Refresh();
+        _stat.SetStat();
     }
 
     void OnKeyEvent()

@@ -7,12 +7,12 @@ public abstract class Stat : MonoBehaviour
 {
     [SerializeField] protected float _maxHp;
     [SerializeField] protected float _hp;
-    [SerializeField] protected float _damage;
+    [SerializeField] protected float _attack;
     [SerializeField] protected float _moveSpeed;
     
     public float MaxHp { get { return _maxHp; } set { _maxHp = value; } }
     public float Hp { get { return Hp; } set { _hp = Mathf.Clamp(value, 0, _maxHp); } }
-    public float Damage { get { return _damage; } set { _damage = value; } }
+    public float Attack { get { return _attack; } set { _attack = value; } }
     public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
 
     protected bool _init;
@@ -28,12 +28,9 @@ public abstract class Stat : MonoBehaviour
         if (_init)
             return false;
 
-        Refresh();
         _init = true;
         return true;
     }
-
-    public abstract void Refresh();
 
     public virtual void OnDamaged(float damage)
     {
@@ -41,6 +38,7 @@ public abstract class Stat : MonoBehaviour
 
         if(_hp <= 0)
         {
+            _hp = 0;
             OnDieEvent.Invoke();
         }
     }

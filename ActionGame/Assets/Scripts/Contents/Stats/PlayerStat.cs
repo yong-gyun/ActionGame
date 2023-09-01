@@ -20,15 +20,16 @@ public class PlayerStat : Stat
         if (base.Init() == false)
             return false;
 
+        SetStat();
         _player = GetComponent<PlayerController>();
         return true;
     }
 
-    public override void Refresh()
+    public void SetStat()
     {
         _maxHp = 100f;
         _hp = _maxHp;
-        _damage = 10f;
+        _attack = 10f;
         _moveSpeedToWalk = 5f;
         _moveSpeedToRun = 7.5f;
         _mp = 0f;
