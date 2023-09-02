@@ -2,31 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Util 
+public class Util
 {
-    public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
+    public static T GetOrAddComponent<T>(GameObject go) where T : Component
     {
-        if (go == null)
-            return null;
-
         T component = go.GetComponent<T>();
 
-        if (component == null)
+        if(component == null)
             component = go.AddComponent<T>();
 
         return component;
     }
 
-    public static T FindChild<T>(GameObject go, string name = null, bool recursive = false) where T : UnityEngine.Object
+    public static T FindChild<T>(GameObject go, string name, bool recursive = false) where T : Object
     {
-        if (go == null)
-            return null;
-
         if(recursive)
         {
             foreach (T component in go.GetComponentsInChildren<T>())
             {
-                if(string.IsNullOrEmpty(name) || component.name == name)
+                if (string.IsNullOrEmpty(name) || component.name == name)
                     return component;
             }
         }
@@ -39,7 +33,7 @@ public class Util
 
                 if(component != null)
                 {
-                    if (string.IsNullOrEmpty(name) || component.name == name)
+                    if(string.IsNullOrEmpty(name) || component.name == name)
                         return component;
                 }
             }
@@ -48,13 +42,13 @@ public class Util
         return null;
     }
 
-    public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)
+    public static GameObject FindChild(GameObject go, string name, bool recursive = false)
     {
         Transform transform = FindChild<Transform>(go, name, recursive);
 
-        if (transform != null)
-            return transform.gameObject;
+        if (transform == null)
+            return null;
 
-        return null;
+        return transform.gameObject;
     }
 }
