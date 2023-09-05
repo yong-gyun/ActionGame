@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class Util
         return component;
     }
 
-    public static T FindChild<T>(GameObject go, string name, bool recursive = false) where T : Object
+    public static T FindChild<T>(GameObject go, string name = null, bool recursive = true) where T : UnityEngine.Object
     {
         if(recursive)
         {
@@ -42,7 +43,7 @@ public class Util
         return null;
     }
 
-    public static GameObject FindChild(GameObject go, string name, bool recursive = false)
+    public static GameObject FindChild(GameObject go, string name = null, bool recursive = true)
     {
         Transform transform = FindChild<Transform>(go, name, recursive);
 

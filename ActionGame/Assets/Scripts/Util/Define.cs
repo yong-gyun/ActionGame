@@ -18,12 +18,31 @@ public class Define
 
     public enum EnemyState
     {
-
+        Idle,
+        Move,
+        Attack,
+        Defense,
+        Hit,
+        Die
     }
 
     public enum SkillType
     {
         Skill_1,
         Skill_2,
+    }
+
+    public enum WorldObject
+    {
+        Unknow,
+        Player,
+        BigSlime,
+        Slime
+    }
+
+    public enum AnimEvent
+    {
+        Enter,
+        Exit
     }
 }

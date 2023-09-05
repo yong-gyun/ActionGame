@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseController : MonoBehaviour
+public abstract class BaseController : MonoBehaviour
 {
+    public Define.WorldObject WorldObjectType { get; protected set; }
+
     protected Animator _anim;
     protected Rigidbody _rb;
     protected bool _init;
 
-    void Start()
+    void Awake()
     {
         Init();    
     }

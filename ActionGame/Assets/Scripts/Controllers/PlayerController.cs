@@ -46,8 +46,24 @@ public class PlayerController : BaseController
     }
 
     PlayerStat _stat;
+    Collider _shieldCollider;
+    Sword _sword;
+
+    [SerializeField] Vector3 _dir;
     PlayerState _state;
-    Vector3 _dir;
+    
+    protected override bool Init()
+    {
+        if (base.Init() == false)
+            return false;
+
+        _shieldCollider = gameObject.FindChild<Collider>("Shield", true);
+        _stat = gameObject.GetOrAddComponent<PlayerStat>();
+        GameObject go = gameObject.FindChild("Sword", true);
+        _sword = go.GetOrAddComponent<Sword>();
+        _sword.Enabled = false;
+        return true;
+    }
 
     private void Update()
     {
@@ -79,8 +95,7 @@ public class PlayerController : BaseController
         {
             if (State == PlayerState.Defense)
                 State = PlayerState.Idle;
-        }
-            
+        }   
     }
 
     void UpdateKeyEvent()
@@ -89,6 +104,23 @@ public class PlayerController : BaseController
         float vertical = Input.GetAxis("Vertical");
 
         _dir = (Vector3.right * horizontal) + (Vector3.forward * vertical);
+
+        if(Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            State = PlayerState.Dodge;
+            return;
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _stat.Speed = _stat.RunSpeed;
+            _anim.SetFloat("Speed", 1f);
+        }
+        else
+        {
+            _stat.Speed = _stat.WalkSpeed;
+            _anim.SetFloat("Speed", 0f);
+        }
     }
 
     protected override void UpdateIdle()
@@ -108,12 +140,24 @@ public class PlayerController : BaseController
             return;
         }
 
-        _rb.velocity = _dir.normalized * _stat.Speed;
+        if(Physics.Raycast(transform.position, transform.forward, 2.5f, LayerMask.GetMask("Block")))
+            return;
+
+        transform.position += _dir.normalized * _stat.Speed * Time.deltaTime;
+        Quaternion qua = Quaternion.LookRotation(_dir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, qua, 20 * Time.deltaTime);
     }
 
     void UpdateDefense()
     {
-        
+        if(_dir != Vector3.zero)
+        {
+            State = PlayerState.Idle;
+            _shieldCollider.enabled = false;
+            return;
+        }
+
+        _shieldCollider.enabled = true;
     }
 
     void OnDodge(int idx)
@@ -124,6 +168,23 @@ public class PlayerController : BaseController
                 _rb.AddForce(_dir * _stat.DodgePower, ForceMode.Impulse);
                 break;
             case 1:
+                _rb.velocity = Vector3.zero;
+                State = PlayerState.Idle;
+                break;
+        }
+    }
+
+    void OnAttack(int idx)
+    {
+        switch(idx)
+        {
+            case 0:
+                _sword.Enabled = true;
+                break;
+            case 1:
+                _sword.Enabled = false;
+                break;
+            case 2:
                 State = PlayerState.Idle;
                 break;
         }
