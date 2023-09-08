@@ -33,17 +33,50 @@ namespace Data
         }
     }
 
-    public class EnemyStatData : StatData
+    public class MonsterStatData : StatData
     {
         public float attackDistance;
 
-        public EnemyStatData(float maxHp, float attack, float speed, float attackDistance)
+        public MonsterStatData()
+        {
+
+        }
+
+        public MonsterStatData(float maxHp, float attack, float speed, float attackDistance)
         {
             this.maxHp = maxHp;
             this.hp = maxHp;
             this.attack = attack;
             this.speed = speed;
             this.attackDistance = attackDistance;
+        }
+    }
+
+    public struct BuyableItemData
+    {
+        public int cost;
+        public int maxCount;
+
+        public BuyableItemData(int cost, int maxCount)
+        {
+            this.cost = cost;
+            this.maxCount = maxCount;
+        }
+    }
+
+    public struct ShopItemData
+    {
+        public Define.BuyableItem type;
+        public string name;
+        public string description;
+        public int cost;
+
+        public ShopItemData(Define.BuyableItem type, string name, string description, int cost)
+        {
+            this.type = type;
+            this.name = name;
+            this.description = description;
+            this.cost = cost;
         }
     }
 }

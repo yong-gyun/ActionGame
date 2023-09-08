@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurtleSlimeController : EnemyController
+public class TurtleSlimeController : MonsterController
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override bool Init()
     {
-        
+        if (base.Init() == false)
+            return false;
+
+        return true;
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnAttack()
     {
         
     }

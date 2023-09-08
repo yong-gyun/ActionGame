@@ -9,6 +9,11 @@ public abstract class UI_Base : MonoBehaviour
 {
     protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 
+    private void Awake()
+    {
+        Init();
+    }
+
     protected abstract void Init();
     protected void Bind<T>(Type type) where T : UnityEngine.Object
     {
@@ -32,7 +37,9 @@ public abstract class UI_Base : MonoBehaviour
     protected void BindImage(Type type) { Bind<Image>(type); }
     protected void BindSlider(Type type) { Bind<Slider>(type); }
     protected void BindButton(Type type) { Bind<Button>(type); }
-
+    protected void BindObject(Type type) { Bind<GameObject>(type); }
+    protected void BindInputField(Type type) { Bind<InputField>(type); }
+    
     protected T Get<T>(int idx) where T : UnityEngine.Object
     {
         UnityEngine.Object[] objects = null;
@@ -50,4 +57,6 @@ public abstract class UI_Base : MonoBehaviour
     protected Image GetImage(int idx) { return Get<Image>(idx); }
     protected Slider GetSlider(int idx) { return Get<Slider>(idx); }
     protected Button GetButton(int idx) { return Get<Button>(idx); }
+    protected GameObject GetObject(int idx) { return Get<GameObject>(idx); }
+    protected InputField GetInputField(int idx) { return Get<InputField>(idx); }
 }

@@ -19,6 +19,7 @@ public class Sword : MonoBehaviour
 
     bool _enabled;
     bool _init;
+    [SerializeField] float _damage;
     Collider _swordCollider;
     TrailRenderer _trail;
 
@@ -33,11 +34,13 @@ public class Sword : MonoBehaviour
         return true;
     }
 
+    public void SetDamage(float damage) { _damage = damage; }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log(other.name);
+            other.GetComponent<MonsterController>().OnDamaged(_damage);
         }    
     }
 }

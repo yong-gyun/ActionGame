@@ -54,7 +54,7 @@ public class UIManager
         T popup = go.GetOrAddComponent<T>();
         popup.transform.SetParent(Root);
         _popupStack.Push(popup);
-
+        popup.transform.SetParent(Root);
         return popup;
     }
 
@@ -71,8 +71,20 @@ public class UIManager
         T sceneUI = go.GetOrAddComponent<T>();
         sceneUI.transform.SetParent(Root);
         SceneUI = sceneUI;
+        sceneUI.transform.SetParent(Root);
 
         return sceneUI;
+    }
+
+    public T MakeSubitemUI<T>(Transform parent, string name = null) where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        GameObject go = Managers.Resource.Instantiate($"UI/Subitem/{name}");
+        T subitem = go.GetOrAddComponent<T>();
+        subitem.transform.SetParent(parent);
+        return subitem;
     }
 
     public void ClosePopupUI()
