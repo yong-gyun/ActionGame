@@ -22,7 +22,7 @@ public class UI_Shop_Subitem : UI_Base
         GetImage((int)Images.ItemImage).sprite = Managers.Resource.Load<Sprite>($"Sprite/Icon/{data.type}");
         GetText((int)Texts.NameText).text = data.name;
         GetText((int)Texts.DescriptionText).text = data.description;
-        GetText((int)Texts.PriceText).text = $"{data.cost}";
+        GetText((int)Texts.PriceText).text = $"{data.cost}G";
 
         GetComponent<Button>().onClick.AddListener(() => { Managers.UI.ShowPopupUI<UI_BuyCount>().SetInfo(data.type, data.cost); } );
     }
