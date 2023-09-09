@@ -58,6 +58,23 @@ public class UIManager
         return popup;
     }
 
+    public T MakeWorldSpaceUI<T>(Transform parent = null, string name = null) where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        GameObject go = Managers.Resource.Instantiate($"UI/WorldSpace/{name}");
+        T worldSpace = go.GetOrAddComponent<T>();
+
+        if(parent != null)
+            worldSpace.transform.SetParent(parent);
+
+        Canvas canvas = go.GetOrAddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.worldCamera = Camera.main;
+        return worldSpace;
+    }
+
     public T ShowSceneUI<T>(string name = null) where T : UI_Scene
     {
         if(string.IsNullOrEmpty(name))
@@ -71,8 +88,6 @@ public class UIManager
         T sceneUI = go.GetOrAddComponent<T>();
         sceneUI.transform.SetParent(Root);
         SceneUI = sceneUI;
-        sceneUI.transform.SetParent(Root);
-
         return sceneUI;
     }
 
@@ -95,6 +110,15 @@ public class UIManager
         UI_Popup popup = _popupStack.Pop();
         Managers.Resource.Destory(popup.gameObject);
         _order--;
+    }
+
+    public void ClosePopupUI(UI_Popup popup)
+    {
+        if (_popupStack.Count == 0)
+            return;
+
+        if(_popupStack.TryPeek(out popup))
+            ClosePopupUI();
     }
 
     public void CloseAllPopupUI()

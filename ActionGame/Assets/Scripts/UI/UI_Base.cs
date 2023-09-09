@@ -39,6 +39,7 @@ public abstract class UI_Base : MonoBehaviour
     protected void BindButton(Type type) { Bind<Button>(type); }
     protected void BindObject(Type type) { Bind<GameObject>(type); }
     protected void BindInputField(Type type) { Bind<TMP_InputField>(type); }
+    protected void BindScrollbar(Type type) { Bind<Scrollbar>(type); }
     
     protected T Get<T>(int idx) where T : UnityEngine.Object
     {
@@ -59,4 +60,5 @@ public abstract class UI_Base : MonoBehaviour
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected GameObject GetObject(int idx) { return Get<GameObject>(idx); }
     protected TMP_InputField GetInputField(int idx) { return Get<TMP_InputField>(idx); }
+    protected Scrollbar GetScrollbar(int idx) { return Get<Scrollbar>(idx); }
 }

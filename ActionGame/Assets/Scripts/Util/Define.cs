@@ -13,26 +13,26 @@ public class Define
 
     public enum StatUpgrade
     {
-        Hp,
-        Mp,
-        Attack,
-        Speed
+        Hp_Upgrade,
+        Mp_Upgrade,
+        Attack_Upgrade,
+        Speed_Upgrade
     }
 
     public enum Potion
     {
-        Hp_Heal,
-        Mp_Heal
+        Hp_Potion,
+        Mp_Potion
     }
 
     public enum BuyableItem
     {
        Hp_Potion,
        Mp_Potion,
-       HpUpgrade,
-       MpUpgrade,
-       AttackUpgrade,
-       SpeedUpgrade
+       Hp_Upgrade,
+       Mp_Upgrade,
+       Attack_Upgrade,
+       Speed_Upgrade
     }
 
     public enum DropItem

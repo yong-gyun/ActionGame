@@ -50,9 +50,9 @@ public class UI_BuyCount : UI_Popup
         switch(_type)
         {
             case BuyableItem.Hp_Potion:
-                if (Managers.Data.BuyableItem[BuyableItem.Hp_Potion].maxCount > Managers.Game.CurrentPositionsCount[(int)Potion.Hp_Heal])
+                if (Managers.Data.BuyableItem[BuyableItem.Hp_Potion].maxCount > Managers.Game.CurrentPositionsCount[(int)Potion.Hp_Potion])
                 {
-                    Managers.Game.CurrentPositionsCount[(int)Potion.Hp_Heal]++;
+                    Managers.Game.CurrentPositionsCount[(int)Potion.Hp_Potion]++;
                     Managers.Game.GetPlayer.Hp += HP_HEAL;
 
                     if (Managers.Game.GetPlayer.MaxHp < Managers.Game.GetPlayer.Hp)
@@ -61,9 +61,9 @@ public class UI_BuyCount : UI_Popup
                 }
                 break;
             case BuyableItem.Mp_Potion:
-                if (Managers.Data.BuyableItem[BuyableItem.Mp_Potion].maxCount > Managers.Game.CurrentPositionsCount[(int)Potion.Mp_Heal])
+                if (Managers.Data.BuyableItem[BuyableItem.Mp_Potion].maxCount > Managers.Game.CurrentPositionsCount[(int)Potion.Mp_Potion])
                 {
-                    Managers.Game.CurrentPositionsCount[(int)Potion.Mp_Heal]++;
+                    Managers.Game.CurrentPositionsCount[(int)Potion.Mp_Potion]++;
                     Managers.Game.GetPlayer.Mp += MP_HEAL;
 
                     if (Managers.Game.GetPlayer.MaxMp < Managers.Game.GetPlayer.Mp)
@@ -73,20 +73,20 @@ public class UI_BuyCount : UI_Popup
                 else
                     return;
                 break;
-            case BuyableItem.AttackUpgrade:
-                if (Managers.Data.BuyableItem[BuyableItem.AttackUpgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Attack])
+            case BuyableItem.Attack_Upgrade:
+                if (Managers.Data.BuyableItem[BuyableItem.Attack_Upgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Attack_Upgrade])
                 {
-                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Attack]++;
+                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Attack_Upgrade]++;
                     Managers.Game.GetPlayer.Attack += UPGRADE_ATTACK;
                     execute = true;
                 }
                 else
                     return;
                 break;
-            case BuyableItem.SpeedUpgrade:
-                if (Managers.Data.BuyableItem[BuyableItem.SpeedUpgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed])
+            case BuyableItem.Speed_Upgrade:
+                if (Managers.Data.BuyableItem[BuyableItem.Speed_Upgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed_Upgrade])
                 {
-                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed]++;
+                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed_Upgrade]++;
                     Managers.Game.GetPlayer.WalkSpeed += UPGRADE_SPEED;
                     Managers.Game.GetPlayer.RunSpeed += UPGRADE_SPEED;
                     execute = true;
@@ -94,18 +94,18 @@ public class UI_BuyCount : UI_Popup
                 else
                     return;
                 break;
-            case BuyableItem.HpUpgrade:
-                if (Managers.Data.BuyableItem[BuyableItem.SpeedUpgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed])
+            case BuyableItem.Hp_Upgrade:
+                if (Managers.Data.BuyableItem[BuyableItem.Speed_Upgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed_Upgrade])
                 {
-                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Hp]++;
+                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Hp_Upgrade]++;
                     Managers.Game.GetPlayer.MaxHp += UPGRADE_HP;
                     execute = true;
                 }
                 break;
-            case BuyableItem.MpUpgrade:
-                if (Managers.Data.BuyableItem[BuyableItem.MpUpgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Mp])
+            case BuyableItem.Mp_Upgrade:
+                if (Managers.Data.BuyableItem[BuyableItem.Mp_Upgrade].maxCount > Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Mp_Upgrade])
                 {
-                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Mp]++;
+                    Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Mp_Upgrade]++;
                     Managers.Game.GetPlayer.MaxMp += UPGRADE_MP;
                     execute = true;
                 }

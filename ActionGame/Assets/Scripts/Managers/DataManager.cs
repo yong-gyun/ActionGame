@@ -34,19 +34,19 @@ public class DataManager
     {
         BuyableItem.Add(Define.BuyableItem.Hp_Potion, new BuyableItemData(8, 10));
         BuyableItem.Add(Define.BuyableItem.Mp_Potion, new BuyableItemData(5, 10));
-        BuyableItem.Add(Define.BuyableItem.HpUpgrade, new BuyableItemData(10, 10));
-        BuyableItem.Add(Define.BuyableItem.MpUpgrade, new BuyableItemData(10, 15));
-        BuyableItem.Add(Define.BuyableItem.AttackUpgrade, new BuyableItemData(10, 8));
-        BuyableItem.Add(Define.BuyableItem.SpeedUpgrade, new BuyableItemData(10, 5));
+        BuyableItem.Add(Define.BuyableItem.Hp_Upgrade, new BuyableItemData(10, 10));
+        BuyableItem.Add(Define.BuyableItem.Mp_Upgrade, new BuyableItemData(10, 15));
+        BuyableItem.Add(Define.BuyableItem.Attack_Upgrade, new BuyableItemData(10, 8));
+        BuyableItem.Add(Define.BuyableItem.Speed_Upgrade, new BuyableItemData(10, 5));
     }
     void Init_ShopItemData()
     {
         ShopItem.Add(new ShopItemData(Define.BuyableItem.Hp_Potion, "체력 회복물약", $"체력을 {HP_HEAL} 회복시킨다.", BuyableItem[Define.BuyableItem.Hp_Potion].cost));
         ShopItem.Add(new ShopItemData(Define.BuyableItem.Mp_Potion, "마나 회복물약", $"마나를 {MP_HEAL} 회복시킨다.", BuyableItem[Define.BuyableItem.Mp_Potion].cost));
-        ShopItem.Add(new ShopItemData(Define.BuyableItem.HpUpgrade, "체력 증가", $"체력을 {UPGRADE_HP} 증가시킨다.", BuyableItem[Define.BuyableItem.HpUpgrade].cost));
-        ShopItem.Add(new ShopItemData(Define.BuyableItem.MpUpgrade, "마나 증가", $"마나를 {UPGRADE_MP} 증가시킨다.", BuyableItem[Define.BuyableItem.MpUpgrade].cost));
-        ShopItem.Add(new ShopItemData(Define.BuyableItem.AttackUpgrade, "공격력 증가", $"공격력을 {UPGRADE_ATTACK} 증가시킨다.", BuyableItem[Define.BuyableItem.AttackUpgrade].cost));
-        ShopItem.Add(new ShopItemData(Define.BuyableItem.SpeedUpgrade, "이동속도 증가", $"이동속도를 {UPGRADE_SPEED} 증가시킨다.", BuyableItem[Define.BuyableItem.SpeedUpgrade].cost));
+        ShopItem.Add(new ShopItemData(Define.BuyableItem.Hp_Upgrade, "체력 증가", $"체력을 {UPGRADE_HP} 증가시킨다.", BuyableItem[Define.BuyableItem.Hp_Upgrade].cost));
+        ShopItem.Add(new ShopItemData(Define.BuyableItem.Mp_Upgrade, "마나 증가", $"마나를 {UPGRADE_MP} 증가시킨다.", BuyableItem[Define.BuyableItem.Mp_Upgrade].cost));
+        ShopItem.Add(new ShopItemData(Define.BuyableItem.Attack_Upgrade, "공격력 증가", $"공격력을 {UPGRADE_ATTACK} 증가시킨다.", BuyableItem[Define.BuyableItem.Attack_Upgrade].cost));
+        ShopItem.Add(new ShopItemData(Define.BuyableItem.Speed_Upgrade, "이동속도 증가", $"이동속도를 {UPGRADE_SPEED} 증가시킨다.", BuyableItem[Define.BuyableItem.Speed_Upgrade].cost));
     }
 
     public void Clear()

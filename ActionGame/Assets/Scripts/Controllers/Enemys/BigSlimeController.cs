@@ -18,6 +18,7 @@ public class BigSlimeController : MonsterController
         }
 
         pc.OnDamaged(Attack);
+        Debug.Log("Attack");
     }
 
     protected override void OnDie()

@@ -15,7 +15,7 @@ public class PlayerController : BaseController
         set
         {
             _state = value;
-            Debug.Log(_state);
+
             switch(State)
             {
                 case PlayerState.Idle:
@@ -67,11 +67,14 @@ public class PlayerController : BaseController
 
     [SerializeField] Vector3 _dir;
     [SerializeField] PlayerState _state;
-    
+
     protected override bool Init()
     {
         if (base.Init() == false)
             return false;
+
+        if (gameObject.GetComponentInChildren<UI_PlayerStatBar>() == null)
+            Managers.UI.MakeWorldSpaceUI<UI_PlayerStatBar>(transform);
 
         _shieldCollider = gameObject.FindChild<Collider>("Shield", true);
         SetStat();
@@ -115,6 +118,9 @@ public class PlayerController : BaseController
 
     void UpdateMouseEvent()
     {
+        if (State == PlayerState.Hit)
+            return;
+
         if(Input.GetMouseButtonDown(0))
             State = PlayerState.Attack;
         else if(Input.GetMouseButton(1))
@@ -233,6 +239,7 @@ public class PlayerController : BaseController
             return;
 
         _isInvin = true;
+        ForWait(1f, () => { _isInvin = false; });
         Hp -= damage;
         Managers.Game.GetPlayer.State = PlayerState.Hit;
 
