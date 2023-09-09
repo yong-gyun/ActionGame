@@ -38,7 +38,7 @@ public abstract class UI_Base : MonoBehaviour
     protected void BindSlider(Type type) { Bind<Slider>(type); }
     protected void BindButton(Type type) { Bind<Button>(type); }
     protected void BindObject(Type type) { Bind<GameObject>(type); }
-    protected void BindInputField(Type type) { Bind<InputField>(type); }
+    protected void BindInputField(Type type) { Bind<TMP_InputField>(type); }
     
     protected T Get<T>(int idx) where T : UnityEngine.Object
     {
@@ -58,5 +58,5 @@ public abstract class UI_Base : MonoBehaviour
     protected Slider GetSlider(int idx) { return Get<Slider>(idx); }
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected GameObject GetObject(int idx) { return Get<GameObject>(idx); }
-    protected InputField GetInputField(int idx) { return Get<InputField>(idx); }
+    protected TMP_InputField GetInputField(int idx) { return Get<TMP_InputField>(idx); }
 }

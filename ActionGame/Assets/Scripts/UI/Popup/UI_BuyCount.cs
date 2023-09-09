@@ -27,6 +27,8 @@ public class UI_BuyCount : UI_Popup
     {
         BindInputField(typeof(InputFields));
         BindButton(typeof(Buttons));
+        GetButton((int)Buttons.ConfirmButton).onClick.AddListener(OnClickConfirmButton);
+        GetButton((int)Buttons.CancleButton).onClick.AddListener(OnClickCancleButton);
     }
 
     public void SetInfo(BuyableItem type, int cost)

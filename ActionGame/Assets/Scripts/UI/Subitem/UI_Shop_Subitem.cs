@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_Shop_Subitem : UI_Base
 {
@@ -22,6 +23,8 @@ public class UI_Shop_Subitem : UI_Base
         GetText((int)Texts.NameText).text = data.name;
         GetText((int)Texts.DescriptionText).text = data.description;
         GetText((int)Texts.PriceText).text = $"{data.cost}";
+
+        GetComponent<Button>().onClick.AddListener(() => { Managers.UI.ShowPopupUI<UI_BuyCount>().SetInfo(data.type, data.cost); } );
     }
 
     protected override void Init()
