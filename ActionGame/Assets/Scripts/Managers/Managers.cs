@@ -12,12 +12,14 @@ public class Managers : MonoBehaviour
     ObjectManager _object = new ObjectManager();
     DataManager _data = new DataManager();
     GameManager _game = new GameManager();
+    InputManager _input = new InputManager();
 
     public static ResourceManager Resource { get { return Instance._resource; } }
     public static UIManager UI { get { return Instance._ui; } }
     public static ObjectManager Object { get { return Instance._object; } }
     public static DataManager Data { get { return Instance._data; } }
     public static GameManager Game { get { return Instance._game; } }
+    public static InputManager Input { get { return Instance._input; } }
 
     static void Init()
     {
@@ -34,5 +36,16 @@ public class Managers : MonoBehaviour
             s_instance = go.GetComponent<Managers>();
             DontDestroyOnLoad(go);
         }
+    }
+
+    private void Update()
+    {
+        Input.OnUpdate();
+    }
+
+    public static void Clear()
+    {
+        s_instance._ui.Clear();
+        s_instance._input.Clear();
     }
 }

@@ -15,7 +15,7 @@ public class PlayerController : BaseController
         set
         {
             _state = value;
-
+            Debug.Log(_state);
             switch(State)
             {
                 case PlayerState.Idle:
@@ -66,7 +66,7 @@ public class PlayerController : BaseController
     public GameObject ShieldItem { get; set; }
 
     [SerializeField] Vector3 _dir;
-    PlayerState _state;
+    [SerializeField] PlayerState _state;
     
     protected override bool Init()
     {
@@ -79,6 +79,9 @@ public class PlayerController : BaseController
         _sword = go.GetOrAddComponent<Sword>();
         _sword.SetDamage(Attack);
         _sword.Enabled = false;
+
+        Managers.Input.MouseAction += UpdateMouseEvent;
+        Managers.Input.KeyAction += UpdateKeyEvent;
         return true;
     }
 
@@ -96,9 +99,6 @@ public class PlayerController : BaseController
 
     private void Update()
     {
-        UpdateMouseEvent();
-        UpdateKeyEvent();
-
         switch(State)
         {
             case PlayerState.Idle:
