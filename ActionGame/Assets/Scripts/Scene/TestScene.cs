@@ -22,5 +22,7 @@ public class TestScene : BaseScene
     {
         if (Input.GetKeyDown(KeyCode.P) && _shopUI == null)
             _shopUI = Managers.UI.ShowPopupUI<UI_Shop>().gameObject;
+
+        Managers.Game.PlayTime += Time.deltaTime;
     }
 }

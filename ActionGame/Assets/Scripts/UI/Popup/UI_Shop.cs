@@ -24,8 +24,12 @@ public class UI_Shop : UI_Popup
         CloseButton
     }
 
+    PlayerController _player;
+    PlayerStatData _statData;
+
     protected override void Init()
     {
+        base.Init();
         BindObject(typeof(GameObjects));
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
@@ -33,6 +37,8 @@ public class UI_Shop : UI_Popup
         GetButton((int)Buttons.PotionTabButton).onClick.AddListener(OnClickPotionTabButton);
         GetButton((int)Buttons.UpgradeTabButton).onClick.AddListener(OnClickUpgradeTabButton);
         GetButton((int)Buttons.CloseButton).onClick.AddListener(ClosePopupUI);
+        _player = Managers.Game.GetPlayer;
+        _statData = Managers.Data.PlayerStat;
 
         List<ShopItemData> data = Managers.Data.ShopItem;
 
@@ -77,5 +83,12 @@ public class UI_Shop : UI_Popup
             Managers.UI.ClosePopupUI();
 
         GetText((int)Texts.GoldText).text = $"{Managers.Game.CurrentGold}G";
+
+        GetText((int)Texts.StatText).text =
+            $@"체력 : {_player.MaxHp} ({_statData.maxHp} + {Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Hp_Upgrade] * Define.UPGRADE_HP}) 
+            마나 : {_player.MaxMp} ({_statData.maxHp} + {Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Mp_Upgrade] * Define.UPGRADE_MP})
+            공격력 : {_player.Attack} ({_statData.attack} + {Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Attack_Upgrade] * Define.UPGRADE_ATTACK})
+            기본 이동속도 : {_player.WalkSpeed} ({_statData.walkSpeed} + {Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Speed_Upgrade] * Define.UPGRADE_SPEED})
+            달리기 속도 : {_player.RunSpeed} ({_statData.runSpeed} + {Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Speed_Upgrade] * Define.UPGRADE_SPEED})";
     }
 }

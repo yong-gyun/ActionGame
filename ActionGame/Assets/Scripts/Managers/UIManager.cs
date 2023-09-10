@@ -102,6 +102,21 @@ public class UIManager
         return subitem;
     }
 
+    public T ShowEffectPopupUI<T>(string name = null) where T : UI_Popup
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        GameObject go = Managers.Resource.Instantiate($"UI/EffectPopup/{name}");
+        T popupUI = go.GetOrAddComponent<T>();
+        return popupUI;
+    }
+
+    public void CloseEffectPopupUI(GameObject go)
+    {
+        Managers.Resource.Destory(go);
+    }
+
     public void ClosePopupUI()
     {
         if (_popupStack.Count == 0)

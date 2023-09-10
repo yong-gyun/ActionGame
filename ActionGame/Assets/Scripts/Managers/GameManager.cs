@@ -16,7 +16,9 @@ public class GameManager
     }
 
     PlayerController _player;
-    public int CurrentGold { get; set; }
+    public int CurrentGold { get; set; } = 10000;
+    public int CurerntScore { get; set; }
+    public float PlayTime { get; set; }
 
     public int[] CurrentPositionsCount = new int[2];
     public int[] PlayerStatUpgradeCount = new int[4];

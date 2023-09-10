@@ -102,6 +102,9 @@ public class PlayerController : BaseController
 
     private void Update()
     {
+        if (State == PlayerState.Die)
+            return;
+
         switch(State)
         {
             case PlayerState.Idle:

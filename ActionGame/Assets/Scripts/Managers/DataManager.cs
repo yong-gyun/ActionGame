@@ -39,6 +39,7 @@ public class DataManager
         BuyableItem.Add(Define.BuyableItem.Attack_Upgrade, new BuyableItemData(10, 8));
         BuyableItem.Add(Define.BuyableItem.Speed_Upgrade, new BuyableItemData(10, 5));
     }
+
     void Init_ShopItemData()
     {
         ShopItem.Add(new ShopItemData(Define.BuyableItem.Hp_Potion, "체력 회복물약", $"체력을 {HP_HEAL} 회복시킨다.", BuyableItem[Define.BuyableItem.Hp_Potion].cost));
