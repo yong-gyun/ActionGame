@@ -17,14 +17,58 @@ public class UI_Shop_Subitem : UI_Base
         NameText,
     }
 
-    public void SetInfo(Data.ShopItemData data)
+    Data.ShopItemData _info;
+    Button _btn;
+    
+    public void SetInfo(Data.ShopItemData info)
     {
-        GetImage((int)Images.ItemImage).sprite = Managers.Resource.Load<Sprite>($"Sprite/Icon/{data.type}");
-        GetText((int)Texts.NameText).text = data.name;
-        GetText((int)Texts.DescriptionText).text = data.description;
-        GetText((int)Texts.PriceText).text = $"{data.cost}G";
+        _info = info;
+        GetImage((int)Images.ItemImage).sprite = Managers.Resource.Load<Sprite>($"Sprite/Icon/{_info.type}");
+        GetText((int)Texts.NameText).text = _info.name;
+        GetText((int)Texts.DescriptionText).text = _info.description;
+        GetText((int)Texts.PriceText).text = $"{_info.cost}G";
 
-        GetComponent<Button>().onClick.AddListener(() => { Managers.UI.ShowPopupUI<UI_BuyCount>().SetInfo(data.type, data.cost); } );
+        _btn = GetComponent<Button>();
+        _btn.onClick.AddListener(OnClickShotSubitemButton);
+    }
+
+    void OnClickShotSubitemButton()
+    {
+        Managers.UI.ShowPopupUI<UI_BuyCount>().SetInfo(_info.type, _info.cost);
+    }
+
+    private void Update()
+    {
+        int cnt = 0;
+
+        if (_info.type.ToString().Contains("Upgrade"))
+        {
+
+            switch(_info.type)
+            {
+                case Define.BuyableItem.Hp_Upgrade:
+                    cnt = Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Hp_Upgrade];
+                    break;
+                case Define.BuyableItem.Attack_Upgrade:
+                    cnt = Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Attack_Upgrade];
+                    break;
+                case Define.BuyableItem.Mp_Upgrade:
+                    cnt = Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Mp_Upgrade];
+                    break;
+                case Define.BuyableItem.Speed_Upgrade:
+                    cnt = Managers.Game.PlayerStatUpgradeCount[(int)Define.StatUpgrade.Speed_Upgrade];
+                    break;
+            }
+
+            if (Managers.Data.BuyableItem[_info.type].maxCount <= cnt)
+            {
+                _btn.interactable = false;
+            }
+        }
+        else
+        {
+
+        }
     }
 
     protected override void Init()

@@ -33,8 +33,11 @@ public class PlayerController : BaseController
                 case PlayerState.Dodge:
                     _anim.CrossFade("Dodge", 0.1f);
                     break;
-                case PlayerState.Skill:
-                    
+                case PlayerState.Skill_1:
+                    _anim.CrossFade("Skill_1", 0.1f);
+                    break;
+                case PlayerState.Skill_2:
+                    _anim.CrossFade("Skill_2", 0.1f);
                     break;
                 case PlayerState.Hit:
                     _anim.CrossFade("Hit", 0.1f);
@@ -59,14 +62,23 @@ public class PlayerController : BaseController
     [SerializeField] float _walkSpeed;
 
     bool _isInvin;
-    
-    Coroutine _coroutine;
     Collider _shieldCollider;
     Sword _sword;
+
+    public PlayerSkillOne SkillOne { get { return _skillOne; } }
+    public PlayerSkillTwo SkillTwo { get { return _skillTwo; } }
+
+
+    PlayerSkillOne _skillOne;
+    PlayerSkillTwo _skillTwo;
+    
     public GameObject ShieldItem { get; set; }
 
     [SerializeField] Vector3 _dir;
     [SerializeField] PlayerState _state;
+    int _attackCombo = 0;
+    bool _isAttacked;
+    bool _useSkill;
 
     protected override bool Init()
     {
@@ -77,27 +89,31 @@ public class PlayerController : BaseController
             Managers.UI.MakeWorldSpaceUI<UI_PlayerStatBar>(transform);
 
         _shieldCollider = gameObject.FindChild<Collider>("Shield", true);
+        _shieldCollider.enabled = false;
         SetStat();
+        
         GameObject go = gameObject.FindChild("Sword", true);
         _sword = go.GetOrAddComponent<Sword>();
         _sword.SetDamage(Attack);
         _sword.Enabled = false;
-
+        tag = "Player";
+        _skillOne = gameObject.GetOrAddComponent<PlayerSkillOne>();
+        _skillTwo = gameObject.GetOrAddComponent<PlayerSkillTwo>();
         Managers.Input.MouseAction += UpdateMouseEvent;
         Managers.Input.KeyAction += UpdateKeyEvent;
         return true;
     }
 
-    void SetStat()
+    public void SetStat()
     {
-        MaxHp = Managers.Data.PlayerStat.maxHp;
-        Hp = Managers.Data.PlayerStat.hp;
-        MaxMp = Managers.Data.PlayerStat.maxMp;
-        Mp = Managers.Data.PlayerStat.mp;
-        Attack = Managers.Data.PlayerStat.attack;
-        WalkSpeed = Managers.Data.PlayerStat.walkSpeed;
-        RunSpeed = Managers.Data.PlayerStat.runSpeed;
+        MaxHp = Managers.Data.PlayerStat.maxHp + Managers.Game.PlayerStatUpgradeCount[(int) StatUpgrade.Hp_Upgrade] * UPGRADE_HP;
+        Hp = MaxHp;
+        MaxMp = Managers.Data.PlayerStat.maxMp + Managers.Game.PlayerStatUpgradeCount[(int) StatUpgrade.Mp_Upgrade] * UPGRADE_MP;
+        Mp = MaxMp;
+        Attack = Managers.Data.PlayerStat.attack + Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Attack_Upgrade] * UPGRADE_ATTACK;
         DodgePower = Managers.Data.PlayerStat.dodgePower;
+        RunSpeed = Managers.Data.PlayerStat.runSpeed + Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed_Upgrade] * UPGRADE_SPEED;
+        WalkSpeed = Managers.Data.PlayerStat.walkSpeed + Managers.Game.PlayerStatUpgradeCount[(int)StatUpgrade.Speed_Upgrade] * UPGRADE_SPEED;
     }
 
     private void Update()
@@ -116,6 +132,9 @@ public class PlayerController : BaseController
             case PlayerState.Defense:
                 UpdateDefense();
                 break;
+            case PlayerState.Attack:
+                UpdateAttack();
+                break;
         }
     }
 
@@ -124,8 +143,14 @@ public class PlayerController : BaseController
         if (State == PlayerState.Hit)
             return;
 
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && State != PlayerState.Attack)
+        {
+            if (_attackCombo == 3)
+                _attackCombo = 0;
+
             State = PlayerState.Attack;
+            _anim.SetFloat("AttackCombo", _attackCombo++);
+        }
         else if(Input.GetMouseButton(1))
             State = PlayerState.Defense;
 
@@ -143,9 +168,9 @@ public class PlayerController : BaseController
 
         _dir = (Vector3.right * horizontal) + (Vector3.forward * vertical);
 
-        if(Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            State = PlayerState.Dodge;
+            OnDodge(0);
             return;
         }
 
@@ -158,6 +183,25 @@ public class PlayerController : BaseController
         {
             Speed = WalkSpeed;
             _anim.SetFloat("Speed", 0f);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            if (_skillOne.SkillUsedable() == false)
+                return;
+
+            State = PlayerState.Skill_1;
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (_skillTwo.SkillUsedable() == false)
+                return;
+
+            State = PlayerState.Skill_2;
+            ForWait(0.5f, () =>
+            {
+                _rb.AddForce(transform.forward * 5f, ForceMode.Impulse);
+            });
         }
     }
 
@@ -182,8 +226,8 @@ public class PlayerController : BaseController
             return;
 
         transform.position += _dir.normalized * Speed * Time.deltaTime;
-        Quaternion qua = Quaternion.LookRotation(_dir);
-        transform.rotation = Quaternion.Slerp(transform.rotation, qua, 20 * Time.deltaTime);
+        Quaternion targetRotation = Quaternion.LookRotation(_dir, Vector3.up); 
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20f * Time.deltaTime);
     }
 
     void UpdateDefense()
@@ -198,12 +242,34 @@ public class PlayerController : BaseController
         _shieldCollider.enabled = true;
     }
 
+    protected override void UpdateAttack()
+    {
+        if (_isAttacked)
+            return;
+
+        State = PlayerState.Idle;
+    }
+
+    void OnUseSkillOne()
+    {
+        _skillOne.UseSkill();
+    }
+
+    void OnUseSkillTwo()
+    {
+        _skillTwo.UseSkill();
+    }
+
     void OnDodge(int idx)
     {
         switch (idx)
         {
             case 0:
-                _rb.AddForce(_dir * DodgePower, ForceMode.Impulse);
+                if (State == PlayerState.Dodge)
+                    return;
+
+                _rb.AddForce(transform.forward * DodgePower * 2.5f, ForceMode.Impulse);
+                State = PlayerState.Dodge;
                 break;
             case 1:
                 _rb.velocity = Vector3.zero;
@@ -214,16 +280,17 @@ public class PlayerController : BaseController
 
     void OnAttack(int idx)
     {
+        ForWait(2f, () => { _attackCombo = 0; });
+
         switch(idx)
         {
             case 0:
                 _sword.Enabled = true;
+                _isAttacked = true;
                 break;
             case 1:
                 _sword.Enabled = false;
-                break;
-            case 2:
-                State = PlayerState.Idle;
+                _isAttacked = false;
                 break;
         }
     }
@@ -241,10 +308,18 @@ public class PlayerController : BaseController
         if (_isInvin)
             return;
 
-        _isInvin = true;
-        ForWait(1f, () => { _isInvin = false; });
+        //점멸 종료 후 false로
+        //_isInvin = true;
+        //ForWait(1f, () => {  });
         Hp -= damage;
-        Managers.Game.GetPlayer.State = PlayerState.Hit;
+
+        _sword.Enabled = false;
+        _isAttacked = false;
+
+        if (State != PlayerState.Attack || State != PlayerState.Skill_1 || State != PlayerState.Skill_2)
+            State = PlayerState.Hit;
+
+        StartCoroutine(CoFlash());
 
         if (Hp <= 0)
         {
@@ -252,46 +327,58 @@ public class PlayerController : BaseController
         }
     }
 
-    void ForWait(float seconds, Action evt)
-    {
-        if (_coroutine != null)
-            StopCoroutine(_coroutine);
-
-        _coroutine = StartCoroutine(CoWait(seconds, evt));
-    }
+    void OnDamagedAnimEvent() { State = PlayerState.Idle; }
 
     IEnumerator CoFlash()
     {
-        float time = 0f;
-        float destTime = 0.75f;
+        //float time = 0f;
+        //float destTime = 0.5f;
 
-        Material[] materials = gameObject.FindChild("Model").GetComponentsInChildren<Material>();
-        float alpha = 1f;
+        _isInvin = true;
+        //List<Material> mats = new List<Material>();
 
-        while (alpha >= 0.5f)
-        {
-            time += Time.deltaTime / destTime;
-            alpha = Mathf.Lerp(1f, 0.5f, time);
-            yield return null;
-        }
+        //foreach (MeshRenderer mesh in gameObject.FindChild("Model").GetComponentsInChildren<MeshRenderer>())
+        //{
+        //    mats.Add(mesh.material);
+        //}
 
-        time = 0f;
+        //float r = 1f;
 
-        while (alpha <= 1f)
-        {
-            time += Time.deltaTime / destTime;
-            alpha = Mathf.Lerp(0.5f, 1f, time);
-            yield return null;
-        }
+        //while (r > 0.5f)
+        //{
+        //    time += Time.deltaTime / destTime;
+        //    r = Mathf.Lerp(0f, 0.5f, time);
 
+        //    foreach (Material mat in mats)
+        //    {
+        //        Color color = mat.color;
+        //        color.g = r;
+        //        color.b = r;
+        //        mat.color = color;
+        //    }
+
+        //    yield return null;
+        //}
+
+        //time = 0f;
+
+        //while (r > 0f)
+        //{
+        //    time += Time.deltaTime / destTime;
+        //    r = Mathf.Lerp(1f, 0f, time);
+
+        //    foreach (Material mat in mats)
+        //    {
+        //        Color color = mat.color;
+        //        color.g = r; 
+        //        color.b = r;
+        //        mat.color = color;
+        //    }
+
+        //    yield return null;
+        //}
+
+        yield return new WaitForSeconds(1f);
         _isInvin = false;
-    }
-
-    IEnumerator CoWait(float seconds, Action evt = null)
-    {
-        yield return new WaitForSeconds(seconds);
-
-        if (evt != null)
-            evt.Invoke();
     }
 }

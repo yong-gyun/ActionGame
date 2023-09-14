@@ -37,7 +37,7 @@ public class UI_Shop : UI_Popup
         GetButton((int)Buttons.PotionTabButton).onClick.AddListener(OnClickPotionTabButton);
         GetButton((int)Buttons.UpgradeTabButton).onClick.AddListener(OnClickUpgradeTabButton);
         GetButton((int)Buttons.CloseButton).onClick.AddListener(ClosePopupUI);
-        _player = Managers.Game.GetPlayer;
+        _player = Managers.Object.Player;
         _statData = Managers.Data.PlayerStat;
 
         List<ShopItemData> data = Managers.Data.ShopItem;
@@ -55,6 +55,13 @@ public class UI_Shop : UI_Popup
         }
 
         OnClickPotionTabButton();
+        Time.timeScale = 0f;
+    }
+
+    protected override void ClosePopupUI()
+    {
+        base.ClosePopupUI();
+        Time.timeScale = 1f;
     }
 
     void OnClickPotionTabButton()

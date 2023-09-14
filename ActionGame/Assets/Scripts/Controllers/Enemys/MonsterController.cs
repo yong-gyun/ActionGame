@@ -44,6 +44,7 @@ public abstract class MonsterController : BaseController
     protected NavMeshAgent _agent;
     [SerializeField] protected MonsterState _state;
     [SerializeField] protected MonsterId _monsterId;
+    protected bool _useSkill;
 
     protected override bool Init()
     {
@@ -51,12 +52,13 @@ public abstract class MonsterController : BaseController
             return false;
 
         WorldObjectType = WorldObject.Enemy;
-        _lockTarget = Managers.Game.GetPlayer.transform;
+        _lockTarget = Managers.Object.Player.transform;
         _agent = gameObject.GetOrAddComponent<NavMeshAgent>();
         _agent.angularSpeed = 0f;
         _agent.height = 0.5f;
         tag = "Enemy";
-        
+        SetStat();
+
         if (_lockTarget != null)
             State = MonsterState.Move;
 
@@ -82,8 +84,17 @@ public abstract class MonsterController : BaseController
 
     protected virtual void Update()
     {
+        if (State == MonsterState.Die)
+            return;
+
         switch(State)
         {
+            case MonsterState.Die:
+                UpdateDie();
+                break;
+            case MonsterState.Idle:
+                UpdateIdle();
+                break;
             case MonsterState.Move:
                 UpdateMove();
                 break;
@@ -92,7 +103,16 @@ public abstract class MonsterController : BaseController
                 break;
         }
     }
-    
+
+    protected override void UpdateIdle()
+    {
+        if(_lockTarget != null)
+        {
+            State = MonsterState.Move;
+            return;
+        }
+    }
+
     protected override void UpdateMove()
     {
         float distance = (_lockTarget.position - transform.position).magnitude;
@@ -120,37 +140,39 @@ public abstract class MonsterController : BaseController
         }
 
         Vector3 dir = (_lockTarget.position - transform.position);
-
-        if (dir.magnitude > AttackDistance)
-        {
-            State = MonsterState.Move;
-            return;
-        }
-
         Quaternion qua = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.Slerp(transform.rotation, qua, 20 * Time.deltaTime);
     }
 
-    protected abstract void OnAttack();
+    protected abstract void OnAttack(int idx);
 
-    protected virtual void OnHitEvent(int idx)
+    protected virtual void OnHitEvent()
     {
-        switch(idx)
-        {
-            case 0:
-                Vector3 dir = transform.position - _lockTarget.position;
-                float knockback = 4f;
-                _rb.AddForce(dir.normalized * knockback, ForceMode.Impulse);
-                break;
-            case 1:
-                _rb.velocity = Vector3.zero;
-                State = MonsterState.Move;
-                break;
-        }
+        Vector3 dir = transform.forward * -1f;
+        _agent.SetDestination(transform.position);
+
+        if (_hitCoroutine != null)
+            StopCoroutine(_hitCoroutine);
+
+        _hitCoroutine = StartCoroutine(CoWaitForHitEvent());
+    }
+    Coroutine _hitCoroutine;
+
+    IEnumerator CoWaitForHitEvent()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if (State == MonsterState.Die)
+            yield break;
+        _rb.velocity = Vector3.zero;
+        State = MonsterState.Idle;
     }
 
     public override void OnDamaged(float damage)
     {
+        if (State == MonsterState.Die)
+            return;
+
         Hp -= damage;
         State = MonsterState.Hit;
 
@@ -163,10 +185,13 @@ public abstract class MonsterController : BaseController
 
     public virtual void OnDeadEvent()
     {
+        if (State == MonsterState.Die)
+            return;
+
+        State = MonsterState.Die;
         _agent.SetDestination(transform.position);
         GetComponent<Collider>().enabled = false;
         _rb.isKinematic = true;
-        State = MonsterState.Die;
     }
 
     protected void OnDropItem()

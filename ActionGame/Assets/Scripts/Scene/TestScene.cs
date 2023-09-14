@@ -12,8 +12,8 @@ public class TestScene : BaseScene
         if (base.Init() == false)
             return false;
 
-        Managers.Object.SpawnMonster(MonsterId.BigSlime).transform.position = _spawnPos.position;
-
+        Managers.Object.SpawnMonster(MonsterId.TurtleSlime).transform.position = _spawnPos.position;
+        Managers.UI.ShowSceneUI<UI_Hud>();
         //Managers.Object.SpawnMonster(MonsterId.BigSlime); 
         return true;
     }

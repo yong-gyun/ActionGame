@@ -4,6 +4,14 @@ using UnityEngine;
 
 namespace Data
 {
+    public class PlayerSkillData
+    {
+        public Define.SkillType type;
+        public float usedMp;
+        public float attack;
+        public float cooltime;
+    }
+
     public class StatData
     {
         public float maxHp;

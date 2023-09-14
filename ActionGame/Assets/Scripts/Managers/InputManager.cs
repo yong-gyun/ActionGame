@@ -12,9 +12,7 @@ public class InputManager
     public void OnUpdate()
     {
         if (EventSystem.current.IsPointerOverGameObject())
-        {
             return;
-        }
 
         if (KeyAction != null)
             KeyAction.Invoke();

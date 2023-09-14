@@ -1,10 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using TMPro;
 using UnityEngine;
 
 public class ObjectManager
 {
+    public PlayerController Player 
+    { 
+        get 
+        {
+            if (_player == null)
+                return Object.FindObjectOfType<PlayerController>();
+            return _player; 
+        } 
+    }
+    PlayerController _player;
+
     public Define.WorldObject GetWorldObjectType(GameObject go)
     {
         BaseController bc = go.GetComponent<BaseController>();
@@ -15,15 +27,25 @@ public class ObjectManager
         return bc.WorldObjectType;
     }
 
+    public PlayerController SpawnPlayer()
+    {
+        GameObject go = Managers.Resource.Instantiate($"Creature/Player");
+
+        if (go == null)
+            return null;
+
+        PlayerController pc = go.GetOrAddComponent<PlayerController>();
+        pc.SetStat();
+        _player = pc;
+        return pc;
+    }
+
     public MonsterController SpawnMonster(Define.MonsterId id)
     {
         GameObject go = Managers.Resource.Instantiate($"Creature/Monster/{id}");
         
         if(go == null)
-        {
-            Debug.Log($"z");
             return null;
-        }
         
         MonsterController mc = go.GetComponent<MonsterController>();
         mc.MonsterId = id;

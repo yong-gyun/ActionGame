@@ -15,7 +15,7 @@ public class UI_PlayerStatBar : UI_Base
 
     protected override void Init()
     {
-        _player = Managers.Game.GetPlayer;
+        _player = Managers.Object.Player;
         _col = _player.GetComponent<Collider>();
         BindScrollbar(typeof(Scrollbars));
     }

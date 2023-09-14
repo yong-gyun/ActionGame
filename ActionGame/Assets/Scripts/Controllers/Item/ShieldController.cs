@@ -8,7 +8,7 @@ public class ShieldController : MonoBehaviour
 
     void Start()
     {
-        Managers.Game.GetPlayer.ShieldItem = gameObject;
+        Managers.Object.Player.ShieldItem = gameObject;
     }
 
     void Update()

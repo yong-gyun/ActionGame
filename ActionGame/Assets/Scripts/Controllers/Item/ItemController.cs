@@ -11,7 +11,7 @@ public class ItemController : MonoBehaviour
     {
         if(type != Define.DropItem.Big_Coin || type != Define.DropItem.Small_Coin)
         {
-            _player = Managers.Game.GetPlayer;
+            _player = Managers.Object.Player;
         }
     }
 

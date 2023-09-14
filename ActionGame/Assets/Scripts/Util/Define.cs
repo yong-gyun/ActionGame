@@ -49,6 +49,7 @@ public class Define
         TurtleSlime,
         BigSlime,
         Slime,
+        MeleeSkeletone
     }
 
     public enum PlayerState
@@ -58,7 +59,8 @@ public class Define
         Attack,
         Defense,
         Dodge,
-        Skill,
+        Skill_1,
+        Skill_2,
         Hit,
         Die
     }
@@ -76,6 +78,8 @@ public class Define
     public enum SceneType
     {
         Title,
+        Menu,
+        Loading,
         Game,
         Test
     }

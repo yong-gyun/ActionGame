@@ -5,20 +5,22 @@ using UnityEngine.AI;
 
 public class BigSlimeController : MonsterController
 {
-    protected override void OnAttack()
+    protected override void OnAttack(int idx)
     {
         PlayerController pc = _lockTarget.GetComponent<PlayerController>();
 
         RaycastHit hit;
 
-        if(Physics.Raycast(transform.position, transform.forward, out hit, 2.5f))
+        Debug.DrawRay(transform.position, Vector3.up + transform.forward * 2.5f, Color.red, 1f);
+
+        if(Physics.Raycast(transform.position, transform.forward + Vector3.up, out hit, 2.5f))
         {
             if(hit.collider.CompareTag("Shield") && pc.State == Define.PlayerState.Defense)
                 return;
         }
 
         pc.OnDamaged(Attack);
-        Debug.Log("Attack");
+        State = Define.MonsterState.Move;
     }
 
     protected override void OnDie()
